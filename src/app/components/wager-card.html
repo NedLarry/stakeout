@@ -86,8 +86,10 @@
 
     <span class="spacer"></span>
 
-    @if (w.status === 'open') {
+    @if (w.status === 'open' && !isMine()) {
       <button class="btn" (click)="onMatch()">Take {{ w.creator.side === 'yes' ? 'NO' : 'YES' }}</button>
+    } @else if (w.status === 'open' && isMine()) {
+      <span class="settled-note">waiting for a taker</span>
     } @else if ((w.status === 'matched' || w.status === 'live') && isMine()) {
       <button class="btn btn--ghost" (click)="onSettle('no')">Settle NO</button>
       <button class="btn" (click)="onSettle('yes')">Settle YES</button>

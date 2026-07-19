@@ -33,7 +33,6 @@
       <input id="pw" type="password" autocomplete="new-password"
              [ngModel]="password()" (ngModelChange)="password.set($event)"
              placeholder="at least 6 characters" (keydown.enter)="submit()" />
-      <p class="hint">Demo only — nothing is sent anywhere and no real money is involved.</p>
     </div>
 
     @if (error()) {
@@ -47,5 +46,5 @@
     </p>
   </div>
 
-  <p class="auth__foot">STAKEOUT · demo build · no real money</p>
+  <p class="auth__foot">STAKEOUT · build 0.0.1</p>
 </div>

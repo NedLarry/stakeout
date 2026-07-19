@@ -21,24 +21,29 @@ export class Home {
   readonly tab = signal<Tab>('live');
   readonly composing = signal(false);
 
-  readonly counts = computed(() => ({
-    live: this.ledger.live().length,
-    open: this.ledger.open().length,
-    settled: this.ledger.settled().length,
-    mine: this.ledger.wagers().filter(
-      (w) => w.creator.handle === this.me || w.taker?.handle === this.me,
-    ).length,
-  }));
+  readonly counts = computed(() => {
+    const me = this.me();
+    return {
+      live: this.ledger.live().length,
+      open: this.ledger.open().length,
+      settled: this.ledger.settled().length,
+      mine: this.ledger.wagers().filter(
+        (w) => w.creator.handle === me || w.taker?.handle === me,
+      ).length,
+    };
+  });
 
   readonly list = computed(() => {
     switch (this.tab()) {
       case 'live': return this.ledger.live();
       case 'open': return this.ledger.open();
       case 'settled': return this.ledger.settled();
-      case 'mine':
+      case 'mine': {
+        const me = this.me();
         return this.ledger.wagers().filter(
-          (w) => w.creator.handle === this.me || w.taker?.handle === this.me,
+          (w) => w.creator.handle === me || w.taker?.handle === me,
         );
+      }
     }
   });
 

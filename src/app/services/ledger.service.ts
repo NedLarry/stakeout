@@ -1,6 +1,7 @@
 import { Injectable, computed, effect, inject, signal } from '@angular/core';
 import { Wager, Side, WagerKind, Visibility, Status } from '../models/wager.model';
 import { CacheService } from './cache.service';
+import { AccountService } from './account.service';
 
 const CACHE_KEY = 'stakeout:ledger';
 
@@ -18,9 +19,10 @@ export interface NewWagerInput {
 @Injectable({ providedIn: 'root' })
 export class LedgerService {
   private readonly cache = inject(CacheService);
+  private readonly account = inject(AccountService);
 
-  // Current user — in a real app this comes from auth.
-  readonly me = 'you';
+  // Current user — the signed-in account's own handle.
+  readonly me = computed(() => this.account.profile().handle);
   readonly currency = '₦';
 
   private readonly _wagers = signal<Wager[]>(this.cache.get<Wager[]>(CACHE_KEY) ?? []);
@@ -38,12 +40,13 @@ export class LedgerService {
 
   readonly stats = computed(() => {
     const all = this._wagers();
+    const me = this.me();
     const mine = all.filter(
-      (w) => w.creator.handle === this.me || w.taker?.handle === this.me,
+      (w) => w.creator.handle === me || w.taker?.handle === me,
     );
     const staked = mine.reduce((sum, w) => {
-      if (w.creator.handle === this.me) return sum + w.creator.stake;
-      if (w.taker?.handle === this.me) return sum + (w.taker?.stake ?? 0);
+      if (w.creator.handle === me) return sum + w.creator.stake;
+      if (w.taker?.handle === me) return sum + (w.taker?.stake ?? 0);
       return sum;
     }, 0);
     return { active: this.live().length, mine: mine.length, staked };
@@ -65,7 +68,7 @@ export class LedgerService {
       title: input.title.trim(),
       detail: input.detail.trim(),
       subject: input.subject?.trim() || undefined,
-      creator: { handle: this.me, side: input.side, stake: input.stake },
+      creator: { handle: this.me(), side: input.side, stake: input.stake },
       visibility: input.visibility,
       spectators: input.visibility === 'open' ? 0 : 0,
       currency: this.currency,

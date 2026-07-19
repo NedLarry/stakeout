@@ -26,7 +26,7 @@ export class Login {
       this.error.set('Your password is at least 4 characters.');
       return;
     }
-    // Demo: password isn't checked — accounts only live in this browser's
+    // Password isn't checked — accounts only live in this browser's
     // 30-minute cache, so signing in just means "found on this device".
     const ok = this.account.signIn(this.email().trim());
     if (!ok) {

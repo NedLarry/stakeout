@@ -36,11 +36,12 @@ export class ProfilePage {
   );
 
   // Wagers this user is party to.
-  readonly myWagers = computed(() =>
-    this.ledger.wagers().filter(
-      (w) => w.creator.handle === this.ledger.me || w.taker?.handle === this.ledger.me,
-    ),
-  );
+  readonly myWagers = computed(() => {
+    const me = this.ledger.me();
+    return this.ledger.wagers().filter(
+      (w) => w.creator.handle === me || w.taker?.handle === me,
+    );
+  });
 
   readonly activeCount = computed(
     () => this.myWagers().filter((w) => w.status === 'live' || w.status === 'matched').length,

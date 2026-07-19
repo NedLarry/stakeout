@@ -23,13 +23,15 @@ export class WagerCard {
   readonly isSecret = computed(() => this.wager().visibility === 'secret');
   readonly isMine = computed(() => {
     const w = this.wager();
-    return w.creator.handle === this.me || w.taker?.handle === this.me;
+    const me = this.me();
+    return w.creator.handle === me || w.taker?.handle === me;
   });
 
   readonly mySide = computed(() => {
     const w = this.wager();
-    if (w.creator.handle === this.me) return w.creator.side;
-    if (w.taker?.handle === this.me) return w.taker.side;
+    const me = this.me();
+    if (w.creator.handle === me) return w.creator.side;
+    if (w.taker?.handle === me) return w.taker.side;
     return null;
   });
 
@@ -55,7 +57,7 @@ export class WagerCard {
   onMatch(): void {
     const w = this.wager();
     // Counter-party matches the creator's stake by default.
-    this.ledger.match(w.id, 'someone', w.creator.stake);
+    this.ledger.match(w.id, this.me(), w.creator.stake);
     this.matched.emit();
   }
 
