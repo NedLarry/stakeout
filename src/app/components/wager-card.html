@@ -1,0 +1,98 @@
+@let w = wager();
+@let o = odds();
+
+<article
+  class="card"
+  [class.card--secret]="isSecret()"
+  [class.card--settled]="w.status === 'settled'"
+  [class.card--mine]="isMine()"
+>
+  <!-- meta row -->
+  <header class="meta">
+    <span class="tag">{{ w.kind === 'challenge' ? 'CHALLENGE' : 'EVENT' }}</span>
+    <span class="dot">·</span>
+    <span class="vis">{{ w.visibility }}</span>
+    @if (isMine()) {
+      <span class="dot">·</span>
+      <span class="tag tag--you">YOU · {{ mySide() }}</span>
+    }
+    <span class="spacer"></span>
+    @if (w.status === 'settled') {
+      <span class="resolved">RESOLVED · {{ w.resolvedTo }}</span>
+    } @else {
+      <span class="clock">{{ countdown() }}</span>
+    }
+  </header>
+
+  <!-- title -->
+  <h3 class="title" [class.title--redacted]="isSecret() && !isMine()">
+    {{ isSecret() && !isMine() ? '████████ ████ ██████ ███████' : w.title }}
+  </h3>
+
+  @if (!(isSecret() && !isMine())) {
+    <p class="detail">{{ w.detail }}</p>
+  } @else {
+    <p class="detail detail--redacted">Resolution criteria hidden between the two parties.</p>
+  }
+
+  <!-- belief split bar : signature element -->
+  <div class="split" role="img"
+       [attr.aria-label]="'Belief split: yes ' + o.yes + ' percent, no ' + o.no + ' percent'">
+    <div class="split__yes" [style.width.%]="o.yes">
+      <span class="split__pct">{{ o.yes }}</span>
+    </div>
+    <div class="split__no" [style.width.%]="o.no">
+      <span class="split__pct">{{ o.no }}</span>
+    </div>
+  </div>
+  <div class="split__legend">
+    <span>YES · will happen</span>
+    <span>pot {{ fmt(pot()) }}</span>
+    <span>NO · won't</span>
+  </div>
+
+  <!-- parties ledger -->
+  <div class="parties">
+    <div class="party" [class.party--win]="w.status === 'settled' && w.resolvedTo === w.creator.side">
+      <span class="party__side">{{ w.creator.side }}</span>
+      <span class="party__handle">{{ w.creator.handle }}</span>
+      <span class="party__stake">{{ fmt(w.creator.stake) }}</span>
+    </div>
+    @if (w.taker) {
+      <div class="party" [class.party--win]="w.status === 'settled' && w.resolvedTo === w.taker.side">
+        <span class="party__side">{{ w.taker.side }}</span>
+        <span class="party__handle">{{ w.taker.handle }}</span>
+        <span class="party__stake">{{ fmt(w.taker.stake) }}</span>
+      </div>
+    } @else {
+      <div class="party party--empty">
+        <span class="party__side">{{ w.creator.side === 'yes' ? 'no' : 'yes' }}</span>
+        <span class="party__handle">— open seat —</span>
+        <span class="party__stake">{{ fmt(w.creator.stake) }}</span>
+      </div>
+    }
+  </div>
+
+  <!-- footer / actions -->
+  <footer class="actions">
+    @if (w.visibility === 'open') {
+      <span class="watch" (click)="onWatch()" tabindex="0"
+            (keydown.enter)="onWatch()">
+        {{ w.spectators }} watching
+      </span>
+    } @else {
+      <span class="watch watch--muted">{{ w.visibility }} · no spectators</span>
+    }
+
+    <span class="spacer"></span>
+
+    @if (w.status === 'open') {
+      <button class="btn" (click)="onMatch()">Take {{ w.creator.side === 'yes' ? 'NO' : 'YES' }}</button>
+    } @else if ((w.status === 'matched' || w.status === 'live') && isMine()) {
+      <button class="btn btn--ghost" (click)="onSettle('no')">Settle NO</button>
+      <button class="btn" (click)="onSettle('yes')">Settle YES</button>
+    } @else if (w.status === 'settled') {
+      <span class="settled-note">settled</span>
+    }
+  </footer>
+</article>

@@ -1,0 +1,51 @@
+<div class="auth">
+  <div class="auth__card">
+    <div class="auth__head">
+      <span class="auth__eyebrow">Join the market</span>
+      <h1>Create account</h1>
+      <p>Set up your handle — it's how counter-parties and spectators know you.</p>
+    </div>
+
+    <div class="field">
+      <label class="lbl" for="name">Name</label>
+      <input id="name" type="text" autocomplete="name"
+             [ngModel]="name()" (ngModelChange)="name.set($event)"
+             placeholder="Ada Okoro" />
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label class="lbl" for="handle">Handle</label>
+        <input id="handle" type="text" autocomplete="username"
+               [ngModel]="handle()" (ngModelChange)="handle.set($event)"
+               placeholder="ada" />
+      </div>
+      <div class="field">
+        <label class="lbl" for="email">Email</label>
+        <input id="email" type="email" autocomplete="email"
+               [ngModel]="email()" (ngModelChange)="email.set($event)"
+               placeholder="ada@mail.com" />
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="lbl" for="pw">Password</label>
+      <input id="pw" type="password" autocomplete="new-password"
+             [ngModel]="password()" (ngModelChange)="password.set($event)"
+             placeholder="at least 6 characters" (keydown.enter)="submit()" />
+      <p class="hint">Demo only — nothing is sent anywhere and no real money is involved.</p>
+    </div>
+
+    @if (error()) {
+      <p class="err">{{ error() }}</p>
+    }
+
+    <button class="btn btn--full" (click)="submit()">Create account</button>
+
+    <p class="auth__alt">
+      Already have one? <a routerLink="/login">Sign in</a>
+    </p>
+  </div>
+
+  <p class="auth__foot">STAKEOUT · demo build · no real money</p>
+</div>

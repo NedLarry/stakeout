@@ -1,0 +1,35 @@
+<div class="auth">
+  <div class="auth__card">
+    <div class="auth__head">
+      <span class="auth__eyebrow">Welcome back</span>
+      <h1>Sign in</h1>
+      <p>Pick up your open wagers and settle what's due.</p>
+    </div>
+
+    <div class="field">
+      <label class="lbl" for="email">Email</label>
+      <input id="email" type="email" autocomplete="email"
+             [ngModel]="email()" (ngModelChange)="email.set($event)"
+             placeholder="name@stakeout.ng" />
+    </div>
+
+    <div class="field">
+      <label class="lbl" for="pw">Password</label>
+      <input id="pw" type="password" autocomplete="current-password"
+             [ngModel]="password()" (ngModelChange)="password.set($event)"
+             placeholder="••••••••" (keydown.enter)="submit()" />
+    </div>
+
+    @if (error()) {
+      <p class="err">{{ error() }}</p>
+    }
+
+    <button class="btn btn--full" (click)="submit()">Sign in</button>
+
+    <p class="auth__alt">
+      New here? <a routerLink="/register">Create an account</a>
+    </p>
+  </div>
+
+  <p class="auth__foot">STAKEOUT · demo build · no real money</p>
+</div>

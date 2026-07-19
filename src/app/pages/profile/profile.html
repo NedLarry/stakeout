@@ -1,0 +1,96 @@
+<div class="profile">
+  <!-- identity card -->
+  <section class="idcard">
+    <div class="idcard__top">
+      <div class="ava">{{ profile().displayName.charAt(0) }}</div>
+      <div class="idcard__who">
+        <h1>{{ profile().displayName }}</h1>
+        <span class="handle">&#64;{{ profile().handle }}</span>
+      </div>
+      @if (!editing()) {
+        <button class="edit" (click)="startEdit()">Edit</button>
+      }
+    </div>
+
+    @if (!editing()) {
+      <p class="bio">{{ profile().bio || 'No bio yet.' }}</p>
+      <div class="idcard__meta">
+        <span>{{ profile().email }}</span>
+        <span class="dot">·</span>
+        <span>Joined {{ joined() }}</span>
+      </div>
+      @if (savedNote()) {
+        <p class="note">{{ savedNote() }}</p>
+      }
+    } @else {
+      <div class="editform">
+        <div class="field">
+          <label class="lbl" for="dn">Display name</label>
+          <input id="dn" type="text"
+                 [ngModel]="displayName()" (ngModelChange)="displayName.set($event)" />
+        </div>
+        <div class="field">
+          <label class="lbl" for="em">Email</label>
+          <input id="em" type="email"
+                 [ngModel]="email()" (ngModelChange)="email.set($event)" />
+        </div>
+        <div class="field">
+          <label class="lbl" for="bio">Bio</label>
+          <textarea id="bio" rows="2"
+                    [ngModel]="bio()" (ngModelChange)="bio.set($event)"
+                    placeholder="How do you bet?"></textarea>
+        </div>
+        <div class="editform__actions">
+          <button class="btn btn--ghost" (click)="cancel()">Cancel</button>
+          <button class="btn" (click)="save()">Save changes</button>
+        </div>
+      </div>
+    }
+  </section>
+
+  <!-- reputation -->
+  <section class="rep">
+    <div class="rep__cell">
+      <span class="rep__num">{{ profile().wins }}&#8211;{{ profile().losses }}</span>
+      <span class="rep__lbl">win &#8211; loss</span>
+    </div>
+    <div class="rep__cell">
+      <span class="rep__num">{{ winRate() }}%</span>
+      <span class="rep__lbl">win rate</span>
+    </div>
+    <div class="rep__cell">
+      <span class="rep__num">{{ settled() }}</span>
+      <span class="rep__lbl">settled</span>
+    </div>
+    <div class="rep__cell">
+      <span class="rep__num">{{ activeCount() }}</span>
+      <span class="rep__lbl">active now</span>
+    </div>
+  </section>
+
+  <!-- track record -->
+  <section class="record">
+    <h2>Track record</h2>
+    <div class="rows">
+      @for (w of myWagers(); track w.id) {
+        <div class="rrow" [attr.data-status]="w.status">
+          <span class="rrow__side">
+            {{ w.creator.handle === 'you' ? w.creator.side : w.taker?.side }}
+          </span>
+          <span class="rrow__title">{{ w.title }}</span>
+          <span class="rrow__status">
+            @switch (w.status) {
+              @case ('settled') {
+                {{ (w.creator.handle === 'you' ? w.creator.side : w.taker?.side) === w.resolvedTo ? 'WON' : 'LOST' }}
+              }
+              @case ('open') { OPEN }
+              @default { LIVE }
+            }
+          </span>
+        </div>
+      } @empty {
+        <div class="rrow rrow--empty">No wagers yet. Head to the market to place one.</div>
+      }
+    </div>
+  </section>
+</div>

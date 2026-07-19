@@ -1,0 +1,93 @@
+<div class="wallet">
+  <header class="phead">
+    <h1>Wallet</h1>
+    <p>Top up to stake, cash out what you've won. Locked funds are tied up in live wagers.</p>
+  </header>
+
+  <div class="grid">
+    <!-- balance panel -->
+    <section class="balance">
+      <div class="balance__total">
+        <span class="balance__lbl">Total balance</span>
+        <span class="balance__big">{{ fmt(balance()) }}</span>
+      </div>
+
+      <div class="split">
+        <div class="split__avail" [style.width.%]="100 - lockedPct()">
+          <span>available</span>
+        </div>
+        <div class="split__lock" [style.width.%]="lockedPct()">
+          <span>locked</span>
+        </div>
+      </div>
+
+      <div class="balance__rows">
+        <div class="brow">
+          <span class="brow__k">Available to stake</span>
+          <span class="brow__v">{{ fmt(wallet().available) }}</span>
+        </div>
+        <div class="brow">
+          <span class="brow__k">Locked in live wagers</span>
+          <span class="brow__v">{{ fmt(wallet().locked) }}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- money movement -->
+    <section class="move">
+      <div class="toggle">
+        <button [class.on]="mode() === 'deposit'" (click)="setMode('deposit')">Deposit</button>
+        <button [class.on]="mode() === 'withdraw'" (click)="setMode('withdraw')">Withdraw</button>
+      </div>
+
+      <div class="field">
+        <label class="lbl" for="amt">Amount</label>
+        <div class="amount">
+          <span class="cur">{{ currency }}</span>
+          <input id="amt" type="number" min="1"
+                 [ngModel]="amount()" (ngModelChange)="amount.set($event)" />
+        </div>
+      </div>
+
+      <div class="quick">
+        <button (click)="quick(1000)">1k</button>
+        <button (click)="quick(5000)">5k</button>
+        <button (click)="quick(10000)">10k</button>
+        <button (click)="quick(25000)">25k</button>
+      </div>
+
+      <button class="btn btn--full" (click)="submit()">
+        {{ mode() === 'deposit' ? 'Add funds' : 'Withdraw to bank' }}
+      </button>
+
+      @if (note()) {
+        <p class="note">{{ note() }}</p>
+      }
+    </section>
+  </div>
+
+  <!-- statement -->
+  <section class="statement">
+    <h2>Statement</h2>
+    <div class="txns">
+      <div class="txn txn--head">
+        <span>Type</span>
+        <span>Detail</span>
+        <span class="ta-r">Amount</span>
+        <span class="ta-r">Balance</span>
+      </div>
+      @for (t of statement(); track t.id) {
+        <div class="txn">
+          <span class="txn__type" [attr.data-type]="t.type">{{ label(t.type) }}</span>
+          <span class="txn__memo">{{ t.memo }}</span>
+          <span class="ta-r txn__amt" [class.pos]="t.amount > 0" [class.neg]="t.amount < 0">
+            {{ t.amount > 0 ? '+' : '' }}{{ fmt(t.amount) }}
+          </span>
+          <span class="ta-r txn__bal">{{ fmt(t.balance) }}</span>
+        </div>
+      } @empty {
+        <div class="txn txn--empty">No movement yet. Add funds to get started.</div>
+      }
+    </div>
+  </section>
+</div>

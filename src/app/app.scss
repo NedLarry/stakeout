@@ -1,0 +1,123 @@
+:host { display: block; }
+
+.shell {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 var(--gutter) 60px;
+}
+
+.masthead {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 0 16px;
+  border-bottom: 2px solid var(--ink);
+  flex-wrap: wrap;
+}
+.masthead--bare {
+  border-bottom: none;
+  justify-content: center;
+  padding-top: 28px;
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  text-decoration: none;
+  color: var(--ink);
+}
+.brand__mark { font-size: 17px; letter-spacing: -2px; }
+.brand__name {
+  font-family: var(--grotesk);
+  font-weight: 800;
+  font-size: 22px;
+  letter-spacing: 0.06em;
+}
+
+.nav {
+  display: flex;
+  gap: 4px;
+  margin-left: 8px;
+}
+.nav a {
+  text-decoration: none;
+  color: var(--meta);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 12px;
+  border: 1px solid transparent;
+}
+.nav a:hover { color: var(--ink); }
+.nav a.on {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+.account {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.account__chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--ink);
+}
+.account__ava {
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--ink);
+  display: grid;
+  place-items: center;
+  font-family: var(--grotesk);
+  font-weight: 800;
+  font-size: 13px;
+  background: var(--ink);
+  color: var(--paper);
+}
+.account__name {
+  font-size: 12.5px;
+  font-weight: 600;
+}
+.account__out {
+  border: 1px solid var(--line-strong);
+  background: var(--paper);
+  color: var(--meta);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 10px;
+}
+.account__out:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+@media (max-width: 560px) {
+  .masthead { gap: 12px; }
+  .nav { order: 3; width: 100%; margin-left: 0; }
+  .nav a { flex: 1; text-align: center; }
+  .account { margin-left: auto; }
+}
+
+.demo-footer {
+  border-top: 1px solid var(--line);
+  margin-top: 40px;
+  padding-top: 16px;
+  text-align: center;
+}
+.demo-footer p {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--meta);
+}
+.demo-footer a {
+  color: var(--ink);
+  font-weight: 600;
+  text-decoration: underline;
+}
+.demo-footer a:hover { color: var(--meta); }

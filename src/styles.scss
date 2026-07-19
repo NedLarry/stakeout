@@ -1,0 +1,39 @@
+/* Stakeout — monochrome ledger aesthetic */
+
+:root {
+  --ink: #000000;
+  --paper: #ffffff;
+  --meta: #8a8a8a;
+  --line: #e4e4e4;
+  --line-strong: #cfcfcf;
+  --fill: #000000;
+  --faint: #f4f4f4;
+
+  --mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', 'Menlo', monospace;
+  --grotesk: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+
+  --gutter: clamp(16px, 4vw, 40px);
+  --maxw: 1080px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--mono);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a { color: inherit; }
+button { font-family: var(--mono); cursor: pointer; }
+input, select, textarea { font-family: var(--mono); }
+
+::selection { background: var(--ink); color: var(--paper); }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}

@@ -1,0 +1,122 @@
+<div class="sheet" role="dialog" aria-modal="true" aria-label="Open a wager">
+  <div class="sheet__panel">
+    <header class="sheet__head">
+      <h2>Open a wager</h2>
+      <button class="x" (click)="cancel()" aria-label="Close">✕</button>
+    </header>
+
+    <!-- kind -->
+    <div class="field">
+      <label class="lbl">Type</label>
+      <div class="toggle">
+        <button [class.on]="kind() === 'challenge'" (click)="setKind('challenge')">
+          Challenge <em>dare someone to act</em>
+        </button>
+        <button [class.on]="kind() === 'event'" (click)="setKind('event')">
+          Event <em>bet on something happening</em>
+        </button>
+      </div>
+    </div>
+
+    <!-- title -->
+    <div class="field">
+      <label class="lbl" for="title">
+        {{ kind() === 'challenge' ? 'The dare' : 'The event' }}
+      </label>
+      <input
+        id="title"
+        type="text"
+        [ngModel]="title()"
+        (ngModelChange)="title.set($event)"
+        [placeholder]="kind() === 'challenge'
+          ? 'e.g. Tunde runs 10km under 55 min on Saturday'
+          : 'e.g. Naira closes below ₦1,500/$ this month'"
+      />
+    </div>
+
+    @if (kind() === 'challenge') {
+      <div class="field">
+        <label class="lbl" for="subj">Who must perform it</label>
+        <input
+          id="subj"
+          type="text"
+          [ngModel]="subject()"
+          (ngModelChange)="subject.set($event)"
+          placeholder="a handle — or leave blank if it's you"
+        />
+      </div>
+    }
+
+    <!-- detail -->
+    <div class="field">
+      <label class="lbl" for="detail">How it resolves</label>
+      <textarea
+        id="detail"
+        rows="2"
+        [ngModel]="detail()"
+        (ngModelChange)="detail.set($event)"
+        placeholder="What counts as YES? Who confirms it?"
+      ></textarea>
+    </div>
+
+    <!-- your side + stake -->
+    <div class="row">
+      <div class="field">
+        <label class="lbl">Your side</label>
+        <div class="toggle toggle--pair">
+          <button [class.on]="side() === 'yes'" (click)="setSide('yes')">YES · will</button>
+          <button [class.on]="side() === 'no'" (click)="setSide('no')">NO · won't</button>
+        </div>
+      </div>
+      <div class="field field--stake">
+        <label class="lbl" for="stake">Your stake</label>
+        <div class="stake">
+          <span class="cur">{{ currency }}</span>
+          <input
+            id="stake"
+            type="number"
+            min="1"
+            [ngModel]="stake()"
+            (ngModelChange)="stake.set($event)"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- visibility -->
+    <div class="field">
+      <label class="lbl">Who can see it</label>
+      <div class="toggle toggle--tri">
+        <button [class.on]="visibility() === 'open'" (click)="setVis('open')">
+          Open <em>spectators welcome</em>
+        </button>
+        <button [class.on]="visibility() === 'private'" (click)="setVis('private')">
+          Private <em>just us two</em>
+        </button>
+        <button [class.on]="visibility() === 'secret'" (click)="setVis('secret')">
+          Secret <em>subject may not know</em>
+        </button>
+      </div>
+    </div>
+
+    <!-- horizon -->
+    <div class="field">
+      <label class="lbl">Resolves in</label>
+      <div class="toggle toggle--quad">
+        <button [class.on]="horizon() === '1d'" (click)="setHorizon('1d')">1 day</button>
+        <button [class.on]="horizon() === '3d'" (click)="setHorizon('3d')">3 days</button>
+        <button [class.on]="horizon() === '7d'" (click)="setHorizon('7d')">1 week</button>
+        <button [class.on]="horizon() === '14d'" (click)="setHorizon('14d')">2 weeks</button>
+      </div>
+    </div>
+
+    @if (error()) {
+      <p class="err">{{ error() }}</p>
+    }
+
+    <footer class="sheet__foot">
+      <button class="btn btn--ghost" (click)="cancel()">Cancel</button>
+      <button class="btn" (click)="submit()">Post wager</button>
+    </footer>
+  </div>
+</div>

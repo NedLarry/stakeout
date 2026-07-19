@@ -1,0 +1,65 @@
+<div class="home">
+  <!-- intro row with primary action -->
+  <section class="lead">
+    <div class="lead__copy">
+      <h1>The market for personal bets</h1>
+      <p>
+        Pick a side on whether an action or event happens — or dare someone directly.
+        Someone takes the other side, the stakes lock, and it settles at the deadline.
+      </p>
+    </div>
+    <button class="new" (click)="openCompose()">+ New wager</button>
+  </section>
+
+  <!-- ticker strip -->
+  <section class="strip">
+    <div class="strip__cell">
+      <span class="strip__num">{{ stats().active }}</span>
+      <span class="strip__lbl">live wagers</span>
+    </div>
+    <div class="strip__cell">
+      <span class="strip__num">{{ stats().mine }}</span>
+      <span class="strip__lbl">you're in</span>
+    </div>
+    <div class="strip__cell">
+      <span class="strip__num">{{ fmtStake(stats().staked) }}</span>
+      <span class="strip__lbl">your stake at risk</span>
+    </div>
+  </section>
+
+  <!-- tabs -->
+  <nav class="tabs" role="tablist">
+    <button role="tab" [attr.aria-selected]="tab() === 'live'"
+            [class.on]="tab() === 'live'" (click)="setTab('live')">
+      Live <span>{{ counts().live }}</span>
+    </button>
+    <button role="tab" [attr.aria-selected]="tab() === 'open'"
+            [class.on]="tab() === 'open'" (click)="setTab('open')">
+      Open seats <span>{{ counts().open }}</span>
+    </button>
+    <button role="tab" [attr.aria-selected]="tab() === 'mine'"
+            [class.on]="tab() === 'mine'" (click)="setTab('mine')">
+      Mine <span>{{ counts().mine }}</span>
+    </button>
+    <button role="tab" [attr.aria-selected]="tab() === 'settled'"
+            [class.on]="tab() === 'settled'" (click)="setTab('settled')">
+      Settled <span>{{ counts().settled }}</span>
+    </button>
+  </nav>
+
+  <!-- ledger -->
+  <main class="ledger">
+    @for (w of list(); track w.id) {
+      <app-wager-card [wager]="w" />
+    } @empty {
+      <div class="empty">
+        <p>Nothing here yet.</p>
+        <button class="btn" (click)="openCompose()">Open the first wager</button>
+      </div>
+    }
+  </main>
+</div>
+
+@if (composing()) {
+  <app-create-wager (closed)="closeCompose()" />
+}
